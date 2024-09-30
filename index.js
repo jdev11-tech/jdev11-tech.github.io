@@ -50,7 +50,9 @@ function showInstallPrompt() {
         // alert  navigator.getInstalledRelatedApps()
         // alert(navigator.getInstalledRelatedApps());
         navigator.getInstalledRelatedApps().then((relatedApps) => {
-            alert(relatedApps);
+            // alert(relatedApps);
+            //print relatedApps on  pwaStatus
+            pwaStatus.textContent = relatedApps;
             const facebookApp = relatedApps.find(app => app.id === 'com.facebook.katana');
             if (facebookApp) {
                 pwaStatus.textContent = "Facebook app is installed";
