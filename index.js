@@ -11,3 +11,14 @@ window.matchMedia('(display-mode: standalone)').addEventListener('change', (evt)
     console.log('DISPLAY_MODE_CHANGED', displayMode);
     alert('DISPLAY_MODE_CHANGED: ' + displayMode);
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const pwaStatus = document.getElementById("pwa-status");
+    if (navigator.serviceWorker.controller) {
+        pwaStatus.textContent = "PWA is active";
+    } else {
+        pwaStatus.textContent = "PWA is inactive";
+    }
+
+
+});
