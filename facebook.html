@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Facebook</title>
+    <link rel="manifest" href="facebook_manifest.json" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="Facebook" />
+    <meta name="apple-mobile-web-app-title" content="Facebook" />
+    <meta name="theme-color" content="#1877F2" />
+    <meta name="msapplication-navbutton-color" content="#1877F2" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="msapplication-starturl" content="/" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+  </head>
+  <body>
+    <h1>Facebook</h1>
+    <p>
+      Facebook is a social networking platform that connects people with
+      friends, family, and communities around the world.
+    </p>
+
+    <div id="pwa-status"></div>
+    <button id="install-button" style="display: none">
+      Install Facebook App
+    </button>
+    <button id="open-app-button" style="display: none">
+      Open Facebook App
+    </button>
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/service-worker.js")
+          .then(function (registration) {
+            console.log(
+              "ServiceWorker registration successful with scope: ",
+              registration.scope
+            );
+          })
+          .catch(function (error) {
+            console.log("ServiceWorker registration failed: ", error);
+          });
+      }
+    </script>
+    <script src="index.js"></script>
+  </body>
+</html>

@@ -1,6 +1,7 @@
 let deferredPrompt;
 
 window.addEventListener('beforeinstallprompt', (e) => {
+    alert('beforeinstallprompt event fired');
     e.preventDefault();
     deferredPrompt = e;
     showInstallPrompt();
@@ -9,10 +10,12 @@ window.addEventListener('beforeinstallprompt', (e) => {
 function showInstallPrompt() {
     const pwaStatus = document.getElementById("pwa-status");
     const installButton = document.getElementById('install-button');
+    const openAppButton = document.getElementById('open-app-button');
 
     if (deferredPrompt) {
         pwaStatus.textContent = "PWA is available for installation";
         installButton.style.display = 'block';
+        openAppButton.style.display = 'none';
 
         installButton.addEventListener('click', (e) => {
             installButton.style.display = 'none';
@@ -32,9 +35,29 @@ function showInstallPrompt() {
         // Check if the app is already installed
         if (window.matchMedia('(display-mode: standalone)').matches) {
             pwaStatus.textContent = "PWA is already installed";
+            installButton.style.display = 'none';
+            openAppButton.style.display = 'block';
         } else {
             pwaStatus.textContent = "PWA is not available for installation";
+            installButton.style.display = 'none';
+            openAppButton.style.display = 'none';
         }
+    }
+
+    // Check if the native Facebook app is installed
+    if ('getInstalledRelatedApps' in navigator) {
+        navigator.getInstalledRelatedApps().then((relatedApps) => {
+            const facebookApp = relatedApps.find(app => app.id === 'com.facebook.katana');
+            if (facebookApp) {
+                pwaStatus.textContent = "Facebook app is installed";
+                installButton.style.display = 'none';
+                openAppButton.style.display = 'block';
+                openAppButton.textContent = 'Open Facebook App';
+                openAppButton.addEventListener('click', () => {
+                    window.location.href = 'fb://';
+                });
+            }
+        });
     }
 }
 
