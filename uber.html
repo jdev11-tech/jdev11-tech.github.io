@@ -22,5 +22,21 @@
   <body>
     <h1>Uber</h1>
     <p>Request a ride, hop in, and go.</p>
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/service-worker.js")
+          .then(function (registration) {
+            console.log(
+              "ServiceWorker registration successful with scope: ",
+              registration.scope
+            );
+          })
+          .catch(function (error) {
+            console.log("ServiceWorker registration failed: ", error);
+          });
+      }
+    </script>
   </body>
 </html>

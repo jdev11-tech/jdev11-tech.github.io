@@ -26,5 +26,21 @@
       airports in the US to meet your car rental needs, including: economy,
       fullsize, hybrid and luxury cars, SUVs and minivans.
     </p>
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/service-worker.js")
+          .then(function (registration) {
+            console.log(
+              "ServiceWorker registration successful with scope: ",
+              registration.scope
+            );
+          })
+          .catch(function (error) {
+            console.log("ServiceWorker registration failed: ", error);
+          });
+      }
+    </script>
   </body>
 </html>
