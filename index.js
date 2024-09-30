@@ -46,6 +46,9 @@ function showInstallPrompt() {
 
     // Check if the native Facebook app is installed
     if ('getInstalledRelatedApps' in navigator) {
+        alert('getInstalledRelatedApps is available');
+        // alert  navigator.getInstalledRelatedApps()
+        alert(navigator.getInstalledRelatedApps());
         navigator.getInstalledRelatedApps().then((relatedApps) => {
             const facebookApp = relatedApps.find(app => app.id === 'com.facebook.katana');
             if (facebookApp) {
