@@ -1,55 +1,61 @@
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    showInstallPrompt();
+});
+
+function showInstallPrompt() {
+    const pwaStatus = document.getElementById("pwa-status");
+    const installButton = document.getElementById('install-button');
+
+    if (deferredPrompt) {
+        pwaStatus.textContent = "PWA is available for installation";
+        installButton.style.display = 'block';
+
+        installButton.addEventListener('click', (e) => {
+            installButton.style.display = 'none';
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                    pwaStatus.textContent = "PWA is installed";
+                } else {
+                    console.log('User dismissed the install prompt');
+                    pwaStatus.textContent = "PWA installation was declined";
+                }
+                deferredPrompt = null;
+            });
+        });
+    } else {
+        // Check if the app is already installed
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            pwaStatus.textContent = "PWA is already installed";
+        } else {
+            pwaStatus.textContent = "PWA is not available for installation";
+        }
+    }
+}
+
+window.addEventListener('appinstalled', (evt) => {
+    console.log('App was installed');
+    document.getElementById("pwa-status").textContent = "PWA was just installed";
+});
+
 // Check the initial display mode
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.ready.then((registration) => {
-        registration.active.postMessage({ type: 'GET_DISPLAY_MODE' });
-    });
+if (window.matchMedia('(display-mode: standalone)').matches) {
+    document.getElementById("pwa-status").textContent = "PWA is already installed";
 }
 
 // Listen for display mode changes
 window.matchMedia('(display-mode: standalone)').addEventListener('change', (evt) => {
     let displayMode = evt.matches ? 'standalone' : 'browser';
     console.log('DISPLAY_MODE_CHANGED', displayMode);
-    alert('DISPLAY_MODE_CHANGED: ' + displayMode);
+    document.getElementById("pwa-status").textContent = "Display mode changed to: " + displayMode;
 });
 
+// Initialize the PWA status on page load
 document.addEventListener("DOMContentLoaded", function () {
-    const pwaStatus = document.getElementById("pwa-status");
-    if (navigator.serviceWorker.controller) {
-        pwaStatus.textContent = "PWA is active";
-    } else {
-        pwaStatus.textContent = "PWA is inactive";
-    }
-
-
+    showInstallPrompt();
 });
-
-
-
-function checkAppInstalled(packageName) {
-    // Create the intent URL
-    const intentUrl = `intent://scan/#Intent;scheme=market;package=${packageName};end`;
-
-    // Create a hidden iframe
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
-
-    // Set a timeout to check if the app was opened
-    const timeout = setTimeout(() => {
-        // If we reach this point, the app is likely not installed
-        window.location.href = `https://play.google.com/store/apps/details?id=${packageName}`;
-    }, 500);
-
-    // Attempt to open the app
-    iframe.src = intentUrl;
-
-    // Listen for the blur event, which may indicate the app was opened
-    window.addEventListener('blur', () => {
-        clearTimeout(timeout);
-        // The app might be installed and opened
-        console.log('App may be installed');
-    });
-}
-
-// Usage
-checkAppInstalled('com.example.app');

@@ -1,6 +1,14 @@
 // service-worker.js
-self.addEventListener('fetch', function (event) {
-    // You can add caching strategies here
+self.addEventListener('install', (event) => {
+    console.log('Service Worker installed');
+});
+
+self.addEventListener('activate', (event) => {
+    console.log('Service Worker activated');
+});
+
+self.addEventListener('fetch', (event) => {
+    console.log('Fetching:', event.request.url);
 });
 
 // Listen for the beforeinstallprompt event
