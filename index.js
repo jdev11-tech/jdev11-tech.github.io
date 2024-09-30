@@ -22,3 +22,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 });
+
+
+
+function checkAppInstalled(packageName) {
+    // Create the intent URL
+    const intentUrl = `intent://scan/#Intent;scheme=market;package=${packageName};end`;
+
+    // Create a hidden iframe
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    // Set a timeout to check if the app was opened
+    const timeout = setTimeout(() => {
+        // If we reach this point, the app is likely not installed
+        window.location.href = `https://play.google.com/store/apps/details?id=${packageName}`;
+    }, 500);
+
+    // Attempt to open the app
+    iframe.src = intentUrl;
+
+    // Listen for the blur event, which may indicate the app was opened
+    window.addEventListener('blur', () => {
+        clearTimeout(timeout);
+        // The app might be installed and opened
+        console.log('App may be installed');
+    });
+}
+
+// Usage
+checkAppInstalled('com.example.app');
